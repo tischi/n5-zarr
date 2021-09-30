@@ -212,7 +212,15 @@ public class DType {
 //		case OBJECT:    // not sure about this
 //		case OTHER:     // not sure about this
 //		case STRING:    // not sure about this
-//		case UNICODE:   // not sure about this
+		case UNICODE:   // not sure about this
+			nBytes = nB;
+			nBits = 0;
+			System.out.println("bytes per string:" +nBytes);
+			System.out.println("endian:" +order);
+			dataBlockFactory = (blockSize, gridPosition, numElements) -> new UnicodeArrayDataBlock( blockSize, gridPosition, new String[numElements], nBytes );
+			byteBlockFactory = (blockSize, gridPosition, numElements) ->
+					new ByteArrayDataBlock(blockSize, gridPosition, new byte[numElements * nBytes]);
+			break;
 //		case TIMEDELTA: // not sure about this
 //		case DATETIME:  // not sure about this
 		default:
