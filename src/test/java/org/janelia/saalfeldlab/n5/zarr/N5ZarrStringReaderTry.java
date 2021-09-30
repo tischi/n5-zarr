@@ -46,6 +46,7 @@ import org.janelia.saalfeldlab.n5.DatasetAttributes;
 import org.janelia.saalfeldlab.n5.GzipCompression;
 import org.janelia.saalfeldlab.n5.N5Reader.Version;
 import org.janelia.saalfeldlab.n5.RawCompression;
+import org.janelia.saalfeldlab.n5.UnicodeArrayDataBlock;
 import org.janelia.saalfeldlab.n5.blosc.BloscCompression;
 import org.janelia.saalfeldlab.n5.imglib2.N5Utils;
 import org.json.simple.JSONObject;
@@ -82,7 +83,14 @@ public class N5ZarrStringReaderTry
 	public static void main( String[] args ) throws IOException
 	{
 		final N5ZarrReader reader = new N5ZarrReader( testZarrDirPath, new GsonBuilder() );
-		final DatasetAttributes datasetAttributes = reader.getDatasetAttributes( "fixed-length" );
-		final DataBlock< ? > dataBlock = reader.readBlock( "fixed-length", datasetAttributes, 0 );
+
+		// read floats
+		final DataBlock< ? > floatBlock = reader.readBlock( "float", reader.getDatasetAttributes( "float" ), 0 );
+		final Object floatData = floatBlock.getData();
+
+		// read Strings
+		final String pathName = "fixed-length-hallo";
+		final DataBlock< ? > stringBlock = reader.readBlock( pathName, reader.getDatasetAttributes( pathName ), 0 );
+		final Object charData = stringBlock.getData();
 	}
 }

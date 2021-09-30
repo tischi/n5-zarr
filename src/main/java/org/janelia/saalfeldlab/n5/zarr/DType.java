@@ -46,6 +46,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.janelia.saalfeldlab.n5.UnicodeArrayDataBlock;
 
 /**
  * Enumerates available zarr data types as defined at
@@ -215,11 +216,11 @@ public class DType {
 		case UNICODE:   // not sure about this
 			nBytes = nB;
 			nBits = 0;
-			System.out.println("bytes per string:" +nBytes);
-			System.out.println("endian:" +order);
+			System.out.println("bytes per string: " +nBytes);
+			System.out.println("endian: " +order);
 			dataBlockFactory = (blockSize, gridPosition, numElements) -> new UnicodeArrayDataBlock( blockSize, gridPosition, new String[numElements], nBytes );
 			byteBlockFactory = (blockSize, gridPosition, numElements) ->
-					new ByteArrayDataBlock(blockSize, gridPosition, new byte[numElements * nBytes]);
+					new ByteArrayDataBlock(blockSize, gridPosition, new byte[numElements * nBytes * 4]);
 			break;
 //		case TIMEDELTA: // not sure about this
 //		case DATETIME:  // not sure about this
@@ -338,6 +339,10 @@ public class DType {
 			default:
 				return DataType.UINT8; // fallback
 			}
+			case UNICODE:
+				final DataType unicode = DataType.UNICODE;
+				unicode.setNumBytes( nBytes );
+				return unicode;
 		default:
 			return DataType.UINT8; // fallback
 		}
